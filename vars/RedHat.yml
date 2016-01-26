@@ -1,0 +1,30 @@
+pkgs: 
+  - php-fpm
+  - php-pdo
+  - php-password-compat
+  - php-mysqlnd
+  - php-gd
+
+service: php-fpm
+
+config_directory: /etc
+#master_config_file: /etc/php-fpm.conf
+#php_ini_file: /etc/php.ini
+
+pool_directory: /etc/php-fpm.d 
+modules_dir: /etc/php.d
+
+default_owner: apache
+
+pidfile: /run/php-fpm/php-fpm.pid
+
+error_log: /var/log/php-fpm/error.log
+
+# problem on debian: look at: /etc/init/php5-fpm.conf
+php_fpm_state_default: "reloaded"
+
+daemonize: "{% if ansible_distribution_major_version|int > 6 %}no{% else %}yes{% endif %}"
+
+php_fpm_default_session_dir: "/var/lib/php/session"
+php_fpm_default_log_dir: "/var/log/php-fpm/"
+

@@ -1,0 +1,25 @@
+---
+# defaults file for php-fpm
+php_fpm: true
+
+# php version (used by role if remi repository php is available)
+php_version: ''
+
+php_memory_limit: "128M"
+php_max_input_vars: "1000"
+
+php_fpm_port_range: "9001-9010"
+
+# session dir for default pool
+php_fpm_session_dir: "{{ php_fpm_default_session_dir }}"
+
+# log dir for default pool
+php_fpm_log_dir: "{{ php_fpm_default_log_dir }}"
+
+# default pool values
+php_fpm_max_children: "5"
+php_fpm_start_servers: "1"
+php_fpm_min_spare_servers: "2"
+php_fpm_max_spare_servers: "5"
+
+state: "{{ php_fpm_state_default }}"

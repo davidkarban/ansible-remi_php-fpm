@@ -1,0 +1,91 @@
+---
+# tasks file for php-fpm
+- name: Load the OS specific variables
+  tags: 
+    - php-fpm
+    - user
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Ensure the php-fpm is installed on Redhat derivates
+  tags: php-fpm
+  yum: name={{ item }} state=present
+  with_items: pkgs
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure the php-fpm is installed on Debian derivates
+  tags: php-fpm
+  apt: name={{ item }} state=present update_cache=yes cache_valid_time=600
+  with_items: pkgs
+  environment: 
+    # prevent mysql from autostart after installation
+    RUNLEVEL: 1
+  when: ansible_os_family == 'Debian'
+
+- name: Ensure master configuration is in place
+  tags: php-fpm
+  template: src={{ item.name + '.j2' }} dest={{ item.path + '/' + item.name }} owner=root group=root mode=0640 backup=yes
+  with_items:
+    - { name: php-fpm.conf, path: "{{ config_directory }}" }
+    - { name: php.ini, path: "{{ config_directory }}" }
+    - { name: www.conf, path: "{{ pool_directory }}" }
+  notify: reload php-fpm
+
+- name: Ensure fpm users are available
+  tags: 
+    - php-fpm
+    - user
+  user: name={{ item.owner }} shell=/bin/bash createhome=yes state=present generate_ssh_key=true home={{ item.home|default("/home/" + item.owner) }}
+  with_items: vhosts
+  when: 
+    - item.php_fpm is defined
+    - item.owner != default_owner
+
+- name: Ensure home directories have sufficient privileges for apache
+  tags: php-fpm
+  file: path={{ item.home|default("/home/" + item.owner) + '/' }} owner={{ item.owner }} group={{ default_owner }} mode=0710
+  with_items: vhosts
+  when:
+    - item.php_fpm is defined
+    - item.owner != default_owner
+
+- name: Ensure default php-fpm log and session dirs are prepared
+  tags: php-fpm
+  file: path={{ item.path }} state=directory owner={{ default_owner }} group={{ default_owner }} mode=0755 
+  with_items:
+    - { name: 'log', path: "{{ php_fpm_log_dir }}" }
+    - { name: "session", path: "{{ php_fpm_session_dir }}" }
+
+- name: Ensure php-fpm log and session dirs are prepared
+  tags: php-fpm
+  file: path={{ item[0].home|default("/home/" + item[0].owner) + '/' + item[1] }} state=directory owner={{ item[0].owner }} group={{ item[0].owner | default(default_owner) }} mode=0755 
+  with_nested:
+    - vhosts
+    - ['log', 'session']
+  when: 
+    - item[0].php_fpm is defined
+    - item[0].owner != default_owner
+
+- name: Ensure all pools are available
+  tags: php-fpm
+  template: src=pool.conf.j2 dest={{ pool_directory + '/' + item.owner|default(default_owner) + '.conf' }} owner={{ item.owner|default(default_owner) }} group={{ item.owner|default(default_owner) }} mode=0600 backup=yes
+  with_items: vhosts
+  notify: reload php-fpm
+  when: 
+    - item.php_fpm is defined
+    - item.owner != default_owner
+
+# Not working, investigating
+#- name: Ensure php-fpm can run on another ports (selinux) and allow apache to connect to it
+#  tags: php-fpm
+#  seport: ports={{ item.php_fpm.address.split(":")[1] }} proto=tcp setype=http_port_t state=present
+#  with_items: vhosts
+
+# workaround for task above
+- name: Ensure php-fpm can run on another ports (selinux) and allow apache to connect to it
+  tags: php-fpm
+  seport: ports={{ php_fpm_port_range }} proto=tcp setype=http_port_t state=present reload=true
+
+- name: Ensure php-fpm is running
+  tags: php-fpm
+  service: name={{ service }} state=started enabled=yes
+

@@ -1,0 +1,23 @@
+pkgs: 
+  - php5-fpm
+
+service: php5-fpm
+
+config_directory: /etc/php5/fpm
+pool_directory: /etc/php5/fpm/pool.d
+modules_dir: /etc/php5/fpm/conf.d
+
+default_owner: www-data
+
+pidfile: /var/run/php5-fpm.pid
+
+error_log: /var/log/php-fpm.log
+
+# problem on debian: look at: /etc/init/php5-fpm.conf
+php_fpm_state_default: "restarted"
+
+daemonize: "{% if ansible_distribution == 'Debian' and ansible_distribution_major_version|int <= 7 %}yes{% else %}no{% endif %}"
+
+php_fpm_default_session_dir: "/var/lib/php5/"
+php_fpm_default_log_dir: "/var/log/php-fpm/"
+
