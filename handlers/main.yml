@@ -1,7 +1,6 @@
 ---
 # handlers file for php-fpm
 - name: reload php-fpm
-  tags: php-fpm
-  service: name={{ service }} state={{ state }}
+  service: name={{ php_version + '-' + remi_php_fpm_service }} state={{ remi_php_fpm_state }}
 
 

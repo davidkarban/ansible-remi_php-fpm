@@ -8,7 +8,7 @@
 ; Include one or more files. If glob(3) exists, it is used to include a bunch of
 ; files from a glob(3) pattern. This directive can be used everywhere in the
 ; file.
-include={{ pool_directory }}/*.conf
+include={{ remi_php_fpm_pool_directory }}/*.conf
 
 ;;;;;;;;;;;;;;;;;;
 ; Global Options ;
@@ -17,11 +17,11 @@ include={{ pool_directory }}/*.conf
 [global]
 ; Pid file
 ; Default Value: none
-pid = {{ pidfile }}
+pid = {{ remi_php_fpm_pidfile }}
 
 ; Error log file
 ; Default Value: /var/log/php-fpm.log
-error_log = {{ error_log }}
+error_log = {{ remi_php_fpm_error_log }}
 
 ; Log level
 ; Possible Values: alert, error, warning, notice, debug
@@ -50,11 +50,11 @@ error_log = {{ error_log }}
 
 ; Send FPM to background. Set to 'no' to keep FPM in foreground for debugging.
 ; Default Value: yes
-daemonize = {{ daemonize }}
+daemonize = {{ remi_php_fpm_daemonize }}
 
 ;;;;;;;;;;;;;;;;;;;;
 ; Pool Definitions ; 
 ;;;;;;;;;;;;;;;;;;;;
 
-; See {{ pool_directory }}/*.conf
+; See {{ remi_php_fpm_pool_directory }}/*.conf
 

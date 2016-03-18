@@ -28,17 +28,17 @@ listen.allowed_clients = 127.0.0.1
 ; BSD-derived systems allow connections regardless of permissions. 
 ; Default Values: user and group are set as the running user
 ;                 mode is set to 0666
-listen.owner = {{ default_owner }}
-listen.group = {{ default_owner }}
+listen.owner = {{ remi_php_fpm_default_owner }}
+listen.group = {{ remi_php_fpm_default_owner }}
 listen.mode = 0660
 
 ; Unix user/group of processes
 ; Note: The user is mandatory. If the group is not set, the default user's group
 ;       will be used.
 ; RPM: apache Choosed to be able to access some dir as httpd
-user = {{ default_owner }}
+user = {{ remi_php_fpm_default_owner }}
 ; RPM: Keep a group allowed to write in log dir.
-group = {{ default_group|default(default_owner) }}
+group = {{ remi_php_fpm_default_group|default(remi_php_fpm_default_owner) }}
 
 ; Choose how the process manager will control the number of child processes.
 ; Possible Values:
@@ -216,12 +216,12 @@ slowlog = /var/log/php-fpm/www-slow.log
 ;                specified at startup with the -d argument
 ;php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f www@my.domain.com
 ;php_flag[display_errors] = off
-php_admin_value[error_log] = {{ php_fpm_log_dir }}www-error.log
+php_admin_value[error_log] = {{ remi_php_fpm_log_dir }}www-error.log
 php_admin_flag[log_errors] = on
 ;php_admin_value[memory_limit] = 128M
 
 ; Set session path to a directory owned by process user
 php_value[session.save_handler] = files
-php_value[session.save_path] = {{ php_fpm_session_dir }}
+php_value[session.save_path] = {{ remi_php_fpm_session_dir }}
 
 
