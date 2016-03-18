@@ -17,7 +17,7 @@ remi_php_fpm_modules_dir: /opt/remi/{{ php_version }}/root/etc/php.d
 
 remi_php_fpm_default_owner: apache
 
-remi_php_fpm_pidfile: /opt/remi/{{ php_version }}/root/var/run/php-fpm
+remi_php_fpm_pidfile: /opt/remi/{{ php_version }}/root/var/run/php-fpm/php-fpm
 
 remi_php_fpm_error_log: /opt/remi/php56/root/var/log/php-fpm/error.log
 
