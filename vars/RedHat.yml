@@ -7,6 +7,8 @@ remi_php_fpm_pkgs:
   - php-gd
   - php-pecl-scrypt
   - php-mcrypt
+  - php-xml
+  - php-soap
 
 remi_php_fpm_service: php-fpm
 
