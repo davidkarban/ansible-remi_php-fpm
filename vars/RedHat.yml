@@ -15,8 +15,8 @@ remi_php_fpm_service: php-fpm
 remi_php_fpm_config_dir: "{% if php_version|int==55 or php_version|int==56 %}/opt/remi/{{ php_version }}/root/etc{% else %}/etc/opt/remi/{{ php_version }}{% endif %}"
 remi_php_fpm_var_dir: "{% if php_version|int==55 or php_version|int==56 %}/opt/remi/{{ php_version }}/root/var/{% else %}/var/opt/remi/{{ php_version }}{% endif %}"
 
-remi_php_fpm_pool_dir: "{{ remi_php_fpm_config_directory:}}/php-fpm.d"
-remi_php_fpm_modules_dir: "{{ remi_php_fpm_config_directory:}}/etc/php.d"
+remi_php_fpm_pool_dir: "{{ remi_php_fpm_config_dir}}/php-fpm.d"
+remi_php_fpm_modules_dir: "{{ remi_php_fpm_config_dir}}/etc/php.d"
 
 remi_php_fpm_default_owner: apache
 
