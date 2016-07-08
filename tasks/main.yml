@@ -14,9 +14,9 @@
 - name: Ensure master configuration is in place
   template: src={{ item.name + '.j2' }} dest={{ item.path + '/' + item.name }} owner=root group=root mode=0640 backup=yes
   with_items:
-    - { name: php-fpm.conf, path: "{{ remi_php_fpm_config_directory }}" }
-    - { name: php.ini, path: "{{ remi_php_fpm_config_directory }}" }
-    - { name: www.conf, path: "{{ remi_php_fpm_pool_directory }}" }
+    - { name: php-fpm.conf, path: "{{ remi_php_fpm_config_dir }}" }
+    - { name: php.ini, path: "{{ remi_php_fpm_config_dir }}" }
+    - { name: www.conf, path: "{{ remi_php_fpm_pool_dir }}" }
   notify: reload php-fpm
 
 - name: Ensure fpm users are available
@@ -67,6 +67,6 @@
 #- name: Ensure php-fpm can run on another ports (selinux) and allow apache to connect to it
 #  seport: ports={{ php_fpm_port_range }} proto=tcp setype=http_port_t state=present reload=true
 #
-#- name: Ensure php-fpm is running
-#  service: name={{ service }} state=started enabled=yes
+- name: Ensure php-fpm is running
+  service: name={{ remi_php_fpm_service }} state=started enabled=yes
 
