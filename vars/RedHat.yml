@@ -12,22 +12,22 @@ remi_php_fpm_pkgs:
 
 remi_php_fpm_service: php-fpm
 
-remi_php_fpm_config_directory: /opt/remi/{{ php_version }}/root/etc
+remi_php_fpm_config_dir: "{% if php_version|int==55 or php_version|int==56 %}/opt/remi/{{ php_version }}/root/etc{% else %}/etc/opt/remi/{{ php_version }}{% endif %}"
+remi_php_fpm_var_dir: "{% if php_version|int==55 or php_version|int==56 %}/opt/remi/{{ php_version }}/root/var/{% else %}/var/opt/remi/{{ php_version }}{% endif %}"
 
-remi_php_fpm_pool_directory: /opt/remi/{{ php_version }}/root/etc/php-fpm.d 
-remi_php_fpm_modules_dir: /opt/remi/{{ php_version }}/root/etc/php.d
+remi_php_fpm_pool_dir: "{{ remi_php_fpm_config_directory:}}/php-fpm.d"
+remi_php_fpm_modules_dir: "{{ remi_php_fpm_config_directory:}}/etc/php.d"
 
 remi_php_fpm_default_owner: apache
 
-remi_php_fpm_pidfile: /opt/remi/{{ php_version }}/root/var/run/php-fpm/php-fpm
+remi_php_fpm_pidfile: "{{ remi_php_fpm_var_dir }}/run/php-fpm/php-fpm"
 
-remi_php_fpm_error_log: /opt/remi/php56/root/var/log/php-fpm/error.log
+remi_php_fpm_error_log: "{{ remi_php_fpm_var_dir }}/log/php-fpm/error.log"
 
-# problem on debian: look at: /etc/init/php5-fpm.conf
 remi_php_fpm_default_state: "reloaded"
 
 remi_php_fpm_daemonize: "{% if ansible_distribution_major_version|int > 6 %}no{% else %}yes{% endif %}"
 
-remi_php_fpm_default_session_dir: "/opt/remi/php56/root/var/lib/php/session"
-remi_php_fpm_default_log_dir: "/opt/remi/php56/root/var/log/php-fpm/"
+remi_php_fpm_default_session_dir: "{{ remi_php_fpm_var_dir }}/lib/php/session"
+remi_php_fpm_default_log_dir: "{{ remi_php_fpm_var_dir }}/log/php-fpm/"
 
