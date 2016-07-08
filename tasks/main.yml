@@ -67,6 +67,6 @@
 #- name: Ensure php-fpm can run on another ports (selinux) and allow apache to connect to it
 #  seport: ports={{ php_fpm_port_range }} proto=tcp setype=http_port_t state=present reload=true
 #
-#- name: Ensure php-fpm is running
-#  service: name={{ service }} state=started enabled=yes
+- name: Ensure php-fpm is running
+  service: name={{ remi_php_fpm_service }} state=started enabled=yes
 
