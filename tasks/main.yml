@@ -8,8 +8,10 @@
   when: ansible_os_family != 'RedHat'
  
 - name: Ensure the php-fpm is installed
-  yum: name={{ php_version + '-' + item }} state=present
-  with_items: remi_php_fpm_pkgs
+  yum: 
+    name: "{{ php_version + '-' + item }}"
+    state: present
+  loop: "{{ remi_php_fpm_pkgs }}"
 
 - name: Ensure master configuration is in place
   template: src={{ item.name + '.j2' }} dest={{ item.path + '/' + item.name }} owner=root group=root mode=0640 backup=yes
